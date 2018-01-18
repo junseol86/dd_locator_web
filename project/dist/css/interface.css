@@ -1,0 +1,6 @@
+#outerWrapper {
+  position: relative; }
+  #outerWrapper #leftPanel {
+    position: absolute;
+    top: 0;
+    left: 0; }

@@ -1,0 +1,32 @@
+html {
+  font-family: 'Malgun-Gothic', '맑은고딕', 'Dotum', '돋움'
+}
+
+button {
+  padding: 4px 6px;
+}
+
+input, textarea {
+  box-sizing: border-box;
+  -webkit-box-sizing:border-box;
+  -moz-box-sizing: border-box;
+}
+
+svg {
+  margin-right: 3px;
+  color: #33a7ff;
+}
+
+.onoff {
+  .hide {
+    display: none;
+  }
+}
+
+.spaceOnLeft {
+  margin-left: 5px;
+}
+
+select {
+  padding: 6px;
+}

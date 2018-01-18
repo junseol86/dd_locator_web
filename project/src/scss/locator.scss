@@ -1,0 +1,123 @@
+@import url('reset.css');
+@import url('common.css');
+
+#outerWrapper {
+  position: relative;
+
+  #leftPanel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    #panoContainer {
+      background: #555;
+    }
+
+    #panoLinkBtns {
+      display: none;
+      background-color: #aaa;
+      > div {
+        display: inline-block;
+        width: 50%;
+        > div {
+          padding: 4px 2px 4px 4px;
+          > button {
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+          }
+        }
+        &:last-child {
+          > div {
+            padding: 4px 4px 4px 2px;
+          }
+        }
+      }
+    }
+
+    #inputContainer {
+      padding: 16px;
+      font-size: 0.8em;
+      & > table {
+        width: 100%;
+        & > tbody > tr {
+          & > td {
+            padding-bottom: 8px;
+            &:first-child {
+              width: 110px;
+              font-size: 0.95em;
+              text-align: right;
+              padding-right: 10px;
+              color: #aaa;
+            }
+            &:last-child {
+              > * {
+                width: 100%;
+              }
+            }
+
+            table {
+              button {
+                width: 100%;
+              }
+            }
+          }
+        }
+      }
+    }
+
+  }
+
+  #mapContainer {
+    position: relative;
+    #filters {
+      padding: 8px 6px 0 8px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border: 1px solid #eee;
+      border-radius: 4px;
+      z-index: 200;
+      position: absolute;
+      left: 6px;
+      top: 6px;
+      > div {
+        margin-bottom: 8px;
+        > * {
+          margin-right: 2px;
+        }
+        input {
+          padding: 5px;
+          &.short {
+            width: 80px;
+          }
+          &.long {
+            width: 245px;
+          }
+        }
+      }
+    }
+  }
+
+  #requestContainer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    background-color: rgba(0, 0, 0, 0.67);
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    div {
+      color: white;
+      padding: 8px;
+      font-size: 0.75em;
+      line-height: 1.2em;
+      border-bottom: 1px solid #111;
+      cursor: pointer;
+      &:hover {
+        color: yellow;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+    }
+  }
+
+}

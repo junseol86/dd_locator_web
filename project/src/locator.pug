@@ -1,0 +1,171 @@
+doctype html
+html(lang='ko')
+  head
+    title 디디 로케이터
+    script(type='text/javascript' src='/js/jquery-3.2.1.min.js')
+    script(type='text/javascript' src='/js/lodash.js')
+    script(type='text/javascript' src='/js/consts.js')
+    script(type='text/javascript' src='/js/cookie.js')
+    script(type='text/javascript' src='/js/map.js')
+    script(type='text/javascript' src='/js/axios.min.js')
+    script(type='text/javascript' src='/js/qs.min.js')
+    script(type='text/javascript' src='/js/asset.js')
+    script(type='text/javascript' src='/js/sizing.js')
+    script(type='text/javascript' src='https://openapi.map.naver.com/openapi/v3/maps.js?clientId=zgIERIui2VzCjd43kVjX&submodules=panorama,geocoder')
+    script(defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js")
+    link(rel='stylesheet' href='/css/locator.css')
+  body
+    div#outerWrapper
+      div#leftPanel
+        div#panoContainer
+        div#panoLinkBtns
+          div
+            div
+              button(onclick="nMap.toPanoLink('naver')") 네이버 거리뷰
+          div 
+            div
+              button 다음 거리뷰
+        div#inputContainer
+          table
+            tr
+              td 종류
+              td
+                select#bldType(name="type")
+                  option(value="one") 원룸
+                  option(value="sg") 상가
+                  option(value="lnd") 토지
+                  option(value="hs") 주택
+                  option(value="") 미분류
+            tr
+              td 주소
+              td#oldAddr
+            tr
+              td 새주소
+              td#newAddr
+            tr
+              td 층수|가구수
+              td#flrFml
+            tr
+              td 사용승인일
+              td#useApr
+            tr
+              td 주용도
+              td#mainPurps
+            tr
+              td 기타용도
+              td#etcPurps
+            tr
+              td 건물명
+              td
+                input#bldName(type="text")
+            tr
+              td 관리업체
+              td
+                input#bldGwan(type="text")
+            tr
+              td 주인 전화번호
+              td
+                input#bldTelOwner(type="text")
+            tr
+              td 관리자 전화번호
+              td
+                input#bldTelGwan(type="text")
+            tr
+              td 현관비번
+              td
+                input#bldIpKey(type="text")
+            tr
+              td 호실비번
+              td
+                input#bldRoomKey(type="text")
+            tr
+              td(style="vertical-align:top;") 메모
+              td
+                textarea#bldMemo(name="memo", rows="2")
+            tr
+              td(style="vertical-align:top;") 벽
+              td
+                textarea#bldOnWall(name="memo", rows="2")
+            tr
+              td(style="vertical-align:top;") 주차장
+              td
+                textarea#bldOnParked(name="memo", rows="2")
+            tr
+              td 작업요청
+              td
+                input#workRequested(type="checkbox" onclick="return false" style="width: inherit;")
+            tr
+              td 
+              td
+                table
+                  tr
+                    td
+                      button#saveBtn(onclick="asset.saveAsset(false)")
+                        span
+                          i(class="far fa-square")
+                        span 저장 + 요청해제
+                    td(width="4")
+                    td
+                      button#saveBtn(onclick="asset.saveAsset(true)")
+                        span
+                          i(class="fas fa-check-square")
+                        span 저장 + 작업요청
+                    td(width="4")
+                    td
+                      button#delBtn(onclick="asset.askDeleteAsset()")
+                        span
+                          i(class="far fa-trash-alt")
+                        span 삭제
+      div#mapContainer
+        div#filters
+          div
+            select#bldTypeFilter(onchange="asset.filterBldType(this, event)")
+              option(value="one") 원룸
+              option(value="sg") 상가
+              option(value="lnd") 토지
+              option(value="hs") 주택
+              option(value="all") 전체
+            button.onoff#noName(onclick="asset.filterNoName()")
+              span.off
+                i(class="far fa-circle")
+              span.on.hide
+                i(class="fas fa-check-circle")
+              span 이름×
+            button.onoff#noNumber(onclick="asset.filterNoNumber()")
+              span.off
+                i(class="far fa-circle")
+              span.on.hide
+                i(class="fas fa-check-circle")
+              span 전화번호×
+            button.onoff#noGwan(onclick="asset.filterNoGwan()")
+              span.off
+                i(class="far fa-circle")
+              span.on.hide
+                i(class="fas fa-check-circle")
+              span 관리업체×
+            input.toReset.short.spaceOnLeft(
+              type="text" placeholder="가구 수 >=" onkeypress="asset.filterFmly(this, event, 'fmlyMin')"
+              )
+            input.toReset.short(
+              type="text" placeholder="가구 수 <=" onkeypress="asset.filterFmly(this, event, 'fmlyMax')"
+              )
+          div(style="display: none;")
+            input.toReset.long(
+              type="text" placeholder="건물 이름 검색" onkeypress="asset.filterSearchName(this, event)"
+              )
+            input.toReset.long(
+              type="text" placeholder="주소 검색" onkeypress="asset.searchAddr(this, event)"
+              )
+          div
+            input.toReset.long(
+              type="text" placeholder="주 용도 검색" onkeypress="asset.filterMainPurps(this, event)"
+              )
+            input.toReset.long(
+              type="text" placeholder="사용승인년도(~부터)" onkeypress="asset.filterUseaprDay(this, event)"
+              )
+          div
+            button(onclick="asset.resetFilter()")
+              span
+                i(class="fas fa-sync-alt") 
+              span 초기화
+      div#requestContainer

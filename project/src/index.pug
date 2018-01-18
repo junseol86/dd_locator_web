@@ -1,0 +1,20 @@
+doctype html
+html(lang='ko')
+  head
+    title 디디 로케이터
+    script(type='text/javascript' src='/js/jquery-3.2.1.min.js')
+    script(type='text/javascript' src='/js/lodash.js')
+    script(type='text/javascript' src='/js/cookie.js')
+    script(type='text/javascript' src='/js/axios.min.js')
+    script(type='text/javascript' src='/js/consts.js')
+    script(type='text/javascript' src='/js/login.js')
+    link(rel='stylesheet' href='/css/login.css')
+  body
+    div(id="outerWrapper")
+      h1 디디 로케이터
+      br
+      input(type="text" id="inputId")
+      br
+      input(type="password" id="inputPw")
+      br
+      button(onclick="auth.loginFromInput()") 로그인
