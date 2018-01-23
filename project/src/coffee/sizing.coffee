@@ -15,5 +15,7 @@ sizeElements = () ->
   $('#mapContainer').css 'height', "#{docH}px"
   $('#requestContainer').css 'height', "#{docH}px"
   $('#panoContainer').css 'height', "#{panoHeight}px"
+  $('#centerCircle').css 'left', "#{(docW - leftPanelWidth) / 2 - 12}px"
+  $('#centerCircle').css 'top', "#{docH / 2 - 42}px"
   nMap.setMap()
   

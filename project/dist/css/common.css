@@ -21,4 +21,5 @@ svg {
   margin-left: 5px; }
 
 select {
-  padding: 6px; }
+  padding: 5px;
+  vertical-align: middle; }

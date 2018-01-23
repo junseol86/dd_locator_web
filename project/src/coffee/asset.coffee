@@ -6,9 +6,9 @@ asset = {
   filter: null
   filterReset: {
     bldType: 'one',
-    noName: false,
-    noNumber: false,
-    noGwan: false,
+    hasName: 0,
+    hasNumber: 0,
+    hasGwan: 0,
     fmlyMin: -1,
     fmlyMax: -1,
     mainPurps: '',
@@ -24,7 +24,6 @@ asset = {
     instance.get 'assetRequestedV2'
     .then (response) ->
       _this.requests = _.reverse(response.data)
-      console.log _this.requests
       _this.showRequested()
     .catch (error) ->
       console.log(error)
@@ -44,6 +43,7 @@ asset = {
     nMap.getAssetsInBound()
 
   getAssetList: (_top, _bottom, _left, _right) ->
+    console.log this.filter
     _this = this
     if this.filter == null
       this.filter = Object.assign {}, this.filterReset
@@ -59,7 +59,7 @@ asset = {
       baseURL: consts.apiUrl
       headers: headerObj
     }
-    instance.get 'assetListV2'
+    instance.get 'assetListV3'
     .then (response) ->
       _this.assetList = _.reverse(response.data)
       nMap.setAssetMarkers()
@@ -82,7 +82,7 @@ asset = {
       baseURL: consts.apiUrl
       headers: headerObj
     }
-    instance.get 'assetDongsV2'
+    instance.get 'assetDongsV3'
     .then (response) ->
       _this.dongList = _.reverse(response.data)
       nMap.setDongMarkers()
@@ -140,7 +140,7 @@ asset = {
     $('#bldName').val this.selectedAsset.bld_name
     $('#bldGwan').val this.selectedAsset.bld_gwan
     $('#bldTelOwner').val this.selectedAsset.bld_tel_owner
-    $('#bldTelGwan').val this.selectedAsset.bld_tel_owner
+    $('#bldTelGwan').val this.selectedAsset.bld_tel_gwan
     $('#bldIpKey').val this.selectedAsset.bld_ipkey
     $('#bldRoomKey').val this.selectedAsset.bld_roomkey
     $('#bldMemo').val this.selectedAsset.bld_memo
@@ -148,6 +148,13 @@ asset = {
     $('#bldOnParked').val this.selectedAsset.bld_on_parked
     $('#workRequested').prop 'checked', if this.selectedAsset.work_requested.trim() == ''
     then false else true
+    if this.selectedAsset.photo != ''
+      $('#seePhoto').show()
+    else
+      $('#seePhoto').hide()
+      
+  seePhoto: () ->
+    window.open consts.photoUrl + this.selectedAsset.photo, '_blank'
 
   saveAsset: (request) ->
     _this = this
@@ -166,7 +173,6 @@ asset = {
         this.selectedAsset.bld_on_parked = $('#bldOnParked').val()
         this.selectedAsset.work_requested = request
       strObj = Qs.stringify this.selectedAsset
-      console.log this.selectedAsset
 
       axios.put consts.apiUrl + 'asset/modifyV2', strObj, {
         headers: {
@@ -183,19 +189,16 @@ asset = {
     this.filter.bldType = $(src).val()
     nMap.getAssetsInBound()
 
-  filterNoName: () ->
-    this.filter.noName = !this.filter.noName
-    this.setFilterInterface()
+  filterHasName: (src, e) ->
+    this.filter.hasName = $(src).val()
     nMap.getAssetsInBound()
 
-  filterNoNumber: () ->
-    this.filter.noNumber = !this.filter.noNumber
-    this.setFilterInterface()
+  filterHasNumber: (src, e) ->
+    this.filter.hasNumber = $(src).val()
     nMap.getAssetsInBound()
 
-  filterNoGwan: () ->
-    this.filter.noGwan = !this.filter.noGwan
-    this.setFilterInterface()
+  filterHasGwan: (src, e) ->
+    this.filter.hasGwan = $(src).val()
     nMap.getAssetsInBound()
 
   filterFmly: (src, e, which) ->
@@ -243,29 +246,10 @@ asset = {
         else
           alert '4자리 년도만 입력하세요.'
 
-  setFilterInterface: () ->
-    if this.filter.noName
-      $('.onoff#noName .on').show()
-      $('.onoff#noName .off').hide()
-    else
-      $('.onoff#noName .off').show()
-      $('.onoff#noName .on').hide()
-    if this.filter.noNumber
-      $('.onoff#noNumber .on').show()
-      $('.onoff#noNumber .off').hide()
-    else
-      $('.onoff#noNumber .off').show()
-      $('.onoff#noNumber .on').hide()
-    if this.filter.noGwan
-      $('.onoff#noGwan .on').show()
-      $('.onoff#noGwan .off').hide()
-    else
-      $('.onoff#noGwan .off').show()
-      $('.onoff#noGwan .on').hide()
-
   resetFilter: () ->
     this.filter = Object.assign {}, this.filterReset
-    this.setFilterInterface()
+    $('.has').val(0)
+    $('#bldTypeFilter').val('one')
     $('.toReset').val('')
     nMap.getAssetsInBound()
 }

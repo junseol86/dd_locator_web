@@ -8,9 +8,9 @@ asset = {
   filter: null,
   filterReset: {
     bldType: 'one',
-    noName: false,
-    noNumber: false,
-    noGwan: false,
+    hasName: 0,
+    hasNumber: 0,
+    hasGwan: 0,
     fmlyMin: -1,
     fmlyMax: -1,
     mainPurps: '',
@@ -25,7 +25,6 @@ asset = {
     });
     return instance.get('assetRequestedV2').then(function(response) {
       _this.requests = _.reverse(response.data);
-      console.log(_this.requests);
       return _this.showRequested();
     }).catch(function(error) {
       return console.log(error);
@@ -51,6 +50,7 @@ asset = {
   },
   getAssetList: function(_top, _bottom, _left, _right) {
     var _this, headerObj, instance;
+    console.log(this.filter);
     _this = this;
     if (this.filter === null) {
       this.filter = Object.assign({}, this.filterReset);
@@ -66,7 +66,7 @@ asset = {
       baseURL: consts.apiUrl,
       headers: headerObj
     });
-    return instance.get('assetListV2').then(function(response) {
+    return instance.get('assetListV3').then(function(response) {
       _this.assetList = _.reverse(response.data);
       return nMap.setAssetMarkers();
     }).catch(function(error) {
@@ -90,7 +90,7 @@ asset = {
       baseURL: consts.apiUrl,
       headers: headerObj
     });
-    return instance.get('assetDongsV2').then(function(response) {
+    return instance.get('assetDongsV3').then(function(response) {
       _this.dongList = _.reverse(response.data);
       return nMap.setDongMarkers();
     }).catch(function(error) {
@@ -153,13 +153,21 @@ asset = {
     $('#bldName').val(this.selectedAsset.bld_name);
     $('#bldGwan').val(this.selectedAsset.bld_gwan);
     $('#bldTelOwner').val(this.selectedAsset.bld_tel_owner);
-    $('#bldTelGwan').val(this.selectedAsset.bld_tel_owner);
+    $('#bldTelGwan').val(this.selectedAsset.bld_tel_gwan);
     $('#bldIpKey').val(this.selectedAsset.bld_ipkey);
     $('#bldRoomKey').val(this.selectedAsset.bld_roomkey);
     $('#bldMemo').val(this.selectedAsset.bld_memo);
     $('#bldOnWall').val(this.selectedAsset.bld_on_wall);
     $('#bldOnParked').val(this.selectedAsset.bld_on_parked);
-    return $('#workRequested').prop('checked', this.selectedAsset.work_requested.trim() === '' ? false : true);
+    $('#workRequested').prop('checked', this.selectedAsset.work_requested.trim() === '' ? false : true);
+    if (this.selectedAsset.photo !== '') {
+      return $('#seePhoto').show();
+    } else {
+      return $('#seePhoto').hide();
+    }
+  },
+  seePhoto: function() {
+    return window.open(consts.photoUrl + this.selectedAsset.photo, '_blank');
   },
   saveAsset: function(request) {
     var _this, strObj;
@@ -180,7 +188,6 @@ asset = {
       this.selectedAsset.work_requested = request;
     }
     strObj = Qs.stringify(this.selectedAsset);
-    console.log(this.selectedAsset);
     return axios.put(consts.apiUrl + 'asset/modifyV2', strObj, {
       headers: {
         bld_idx: this.selectedAsset.bld_idx
@@ -196,19 +203,16 @@ asset = {
     this.filter.bldType = $(src).val();
     return nMap.getAssetsInBound();
   },
-  filterNoName: function() {
-    this.filter.noName = !this.filter.noName;
-    this.setFilterInterface();
+  filterHasName: function(src, e) {
+    this.filter.hasName = $(src).val();
     return nMap.getAssetsInBound();
   },
-  filterNoNumber: function() {
-    this.filter.noNumber = !this.filter.noNumber;
-    this.setFilterInterface();
+  filterHasNumber: function(src, e) {
+    this.filter.hasNumber = $(src).val();
     return nMap.getAssetsInBound();
   },
-  filterNoGwan: function() {
-    this.filter.noGwan = !this.filter.noGwan;
-    this.setFilterInterface();
+  filterHasGwan: function(src, e) {
+    this.filter.hasGwan = $(src).val();
     return nMap.getAssetsInBound();
   },
   filterFmly: function(src, e, which) {
@@ -266,32 +270,10 @@ asset = {
       }
     }
   },
-  setFilterInterface: function() {
-    if (this.filter.noName) {
-      $('.onoff#noName .on').show();
-      $('.onoff#noName .off').hide();
-    } else {
-      $('.onoff#noName .off').show();
-      $('.onoff#noName .on').hide();
-    }
-    if (this.filter.noNumber) {
-      $('.onoff#noNumber .on').show();
-      $('.onoff#noNumber .off').hide();
-    } else {
-      $('.onoff#noNumber .off').show();
-      $('.onoff#noNumber .on').hide();
-    }
-    if (this.filter.noGwan) {
-      $('.onoff#noGwan .on').show();
-      return $('.onoff#noGwan .off').hide();
-    } else {
-      $('.onoff#noGwan .off').show();
-      return $('.onoff#noGwan .on').hide();
-    }
-  },
   resetFilter: function() {
     this.filter = Object.assign({}, this.filterReset);
-    this.setFilterInterface();
+    $('.has').val(0);
+    $('#bldTypeFilter').val('one');
     $('.toReset').val('');
     return nMap.getAssetsInBound();
   }

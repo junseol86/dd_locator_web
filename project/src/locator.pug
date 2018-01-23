@@ -59,13 +59,13 @@ html(lang='ko')
               td
                 input#bldName(type="text")
             tr
-              td 관리업체
-              td
-                input#bldGwan(type="text")
-            tr
               td 주인 전화번호
               td
                 input#bldTelOwner(type="text")
+            tr
+              td 관리업체
+              td
+                input#bldGwan(type="text")
             tr
               td 관리자 전화번호
               td
@@ -94,6 +94,7 @@ html(lang='ko')
               td 작업요청
               td
                 input#workRequested(type="checkbox" onclick="return false" style="width: inherit;")
+                button#seePhoto(style="width: inherit; margin-left: 12px;" onclick="asset.seePhoto()") 사진 보기
             tr
               td 
               td
@@ -125,24 +126,18 @@ html(lang='ko')
               option(value="lnd") 토지
               option(value="hs") 주택
               option(value="all") 전체
-            button.onoff#noName(onclick="asset.filterNoName()")
-              span.off
-                i(class="far fa-circle")
-              span.on.hide
-                i(class="fas fa-check-circle")
-              span 이름×
-            button.onoff#noNumber(onclick="asset.filterNoNumber()")
-              span.off
-                i(class="far fa-circle")
-              span.on.hide
-                i(class="fas fa-check-circle")
-              span 전화번호×
-            button.onoff#noGwan(onclick="asset.filterNoGwan()")
-              span.off
-                i(class="far fa-circle")
-              span.on.hide
-                i(class="fas fa-check-circle")
-              span 관리업체×
+            select.has#hasName(onclick="asset.filterHasName(this, event)")
+              option(value="0") 이름무관
+              option(value="-1") 이름없음
+              option(value="1") 이름있음
+            select.has#hasNumber(onclick="asset.filterHasNumber(this, event)")
+              option(value="0") 번호무관
+              option(value="-1") 번호없음
+              option(value="1") 번호있음
+            select.has#hasGwan(onclick="asset.filterHasGwan(this, event)")
+              option(value="0") 업체무관
+              option(value="-1") 업체없음
+              option(value="1") 업체있음
             input.toReset.short.spaceOnLeft(
               type="text" placeholder="가구 수 >=" onkeypress="asset.filterFmly(this, event, 'fmlyMin')"
               )
@@ -168,4 +163,7 @@ html(lang='ko')
               span
                 i(class="fas fa-sync-alt") 
               span 초기화
+        div#centerCircle
+          div
+            div
       div#requestContainer
