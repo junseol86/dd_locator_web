@@ -126,6 +126,13 @@ html(lang='ko')
               option(value="lnd") 토지
               option(value="hs") 주택
               option(value="all") 전체
+            input.toReset.short.spaceOnLeft(
+              type="text" placeholder="가구 수 >=" onkeypress="asset.filterFmly(this, event, 'fmlyMin')"
+              )
+            input.toReset.short(
+              type="text" placeholder="가구 수 <=" onkeypress="asset.filterFmly(this, event, 'fmlyMax')"
+              )
+          div
             select.has#hasName(onclick="asset.filterHasName(this, event)")
               option(value="0") 이름무관
               option(value="-1") 이름없음
@@ -138,12 +145,6 @@ html(lang='ko')
               option(value="0") 업체무관
               option(value="-1") 업체없음
               option(value="1") 업체있음
-            input.toReset.short.spaceOnLeft(
-              type="text" placeholder="가구 수 >=" onkeypress="asset.filterFmly(this, event, 'fmlyMin')"
-              )
-            input.toReset.short(
-              type="text" placeholder="가구 수 <=" onkeypress="asset.filterFmly(this, event, 'fmlyMax')"
-              )
           div(style="display: none;")
             input.toReset.long(
               type="text" placeholder="건물 이름 검색" onkeypress="asset.filterSearchName(this, event)"
@@ -156,7 +157,7 @@ html(lang='ko')
               type="text" placeholder="주 용도 검색" onkeypress="asset.filterMainPurps(this, event)"
               )
             input.toReset.long(
-              type="text" placeholder="사용승인년도(~부터)" onkeypress="asset.filterUseaprDay(this, event)"
+              type="text" placeholder="사용승인년도 ~부터" onkeypress="asset.filterUseaprDay(this, event)"
               )
           div
             button(onclick="asset.resetFilter()")
