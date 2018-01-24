@@ -3,57 +3,12 @@ var asset;
 asset = {
   assetList: [],
   dongList: [],
-  requests: [],
   selectedAsset: null,
-  filter: null,
-  filterReset: {
-    bldType: 'one',
-    hasName: 0,
-    hasNumber: 0,
-    hasGwan: 0,
-    fmlyMin: -1,
-    fmlyMax: -1,
-    mainPurps: '',
-    useaprDay: ''
-  },
-  getRequests: function() {
-    var _this, instance;
-    _this = this;
-    instance = axios.create({
-      baseURL: consts.apiUrl,
-      headers: {}
-    });
-    return instance.get('assetRequestedV2').then(function(response) {
-      _this.requests = _.reverse(response.data);
-      return _this.showRequested();
-    }).catch(function(error) {
-      return console.log(error);
-    });
-  },
-  showRequested: function() {
-    var i, idx, len, ref, results, rq;
-    $('#requestContainer').empty();
-    ref = this.requests;
-    results = [];
-    for (idx = i = 0, len = ref.length; i < len; idx = ++i) {
-      rq = ref[idx];
-      results.push($('#requestContainer').append(`<div onclick='asset.selectRequested(${idx})'>${rq.plat_plc}</div>`));
-    }
-    return results;
-  },
-  selectRequested: function(idx) {
-    this.selectedAsset = this.requests[idx];
-    this.selectAssetResult();
-    nMap.map.setCenter(new naver.maps.LatLng(this.requests[idx].bld_map_y, this.requests[idx].bld_map_x));
-    nMap.map.setZoom(14);
-    return nMap.getAssetsInBound();
-  },
   getAssetList: function(_top, _bottom, _left, _right) {
     var _this, headerObj, instance;
-    console.log(this.filter);
     _this = this;
-    if (this.filter === null) {
-      this.filter = Object.assign({}, this.filterReset);
+    if (fltr.filter === null) {
+      fltr.filter = Object.assign({}, fltr.filterReset);
     }
     headerObj = {
       'top': _top,
@@ -61,13 +16,14 @@ asset = {
       'left': _left,
       'right': _right
     };
-    headerObj = Object.assign(headerObj, this.filter);
+    headerObj = Object.assign(headerObj, fltr.filter);
     instance = axios.create({
       baseURL: consts.apiUrl,
       headers: headerObj
     });
-    return instance.get('assetListV3').then(function(response) {
-      _this.assetList = _.reverse(response.data);
+    return instance.get('assetListV4').then(function(response) {
+      _this.assetList = _.reverse(response.data.asset_list);
+      $('#totalAssetCount').text(response.data.total_count);
       return nMap.setAssetMarkers();
     }).catch(function(error) {
       return console.log(error);
@@ -76,8 +32,8 @@ asset = {
   getDongList: function(_top, _bottom, _left, _right) {
     var _this, headerObj, instance;
     _this = this;
-    if (this.filter === null) {
-      this.filter = Object.assign({}, this.filterReset);
+    if (fltr.filter === null) {
+      fltr.filter = Object.assign({}, fltr.filterReset);
     }
     headerObj = {
       'top': _top,
@@ -85,13 +41,14 @@ asset = {
       'left': _left,
       'right': _right
     };
-    headerObj = Object.assign(headerObj, this.filter);
+    headerObj = Object.assign(headerObj, fltr.filter);
     instance = axios.create({
       baseURL: consts.apiUrl,
       headers: headerObj
     });
-    return instance.get('assetDongsV3').then(function(response) {
-      _this.dongList = _.reverse(response.data);
+    return instance.get('assetDongsV4').then(function(response) {
+      _this.dongList = _.reverse(response.data.dong_list);
+      $('#totalAssetCount').text(response.data.total_count);
       return nMap.setDongMarkers();
     }).catch(function(error) {
       return console.log(error);
@@ -107,8 +64,8 @@ asset = {
   deleteAsset: function() {
     var _this, headerObj, instance;
     _this = this;
-    if (this.filter === null) {
-      this.filter = Object.assign({}, this.filterReset);
+    if (fltr.filter === null) {
+      fltr.filter = Object.assign({}, fltr.filterReset);
     }
     headerObj = {
       'bld_idx': _this.selectedAsset.bld_idx
@@ -196,85 +153,14 @@ asset = {
       'Content-Type': 'application/x-www-form-urlencoded'
     }).then(function(result) {
       nMap.getAssetsInBound();
-      return _this.getRequests();
+      return request.getRequests();
     });
   },
-  filterBldType: function(src, e) {
-    this.filter.bldType = $(src).val();
-    return nMap.getAssetsInBound();
-  },
-  filterHasName: function(src, e) {
-    this.filter.hasName = $(src).val();
-    return nMap.getAssetsInBound();
-  },
-  filterHasNumber: function(src, e) {
-    this.filter.hasNumber = $(src).val();
-    return nMap.getAssetsInBound();
-  },
-  filterHasGwan: function(src, e) {
-    this.filter.hasGwan = $(src).val();
-    return nMap.getAssetsInBound();
-  },
-  filterFmly: function(src, e, which) {
-    if (e.key === 'Enter'.toString()) {
-      if ($.isNumeric($(src).val())) {
-        this.filter[which] = $(src).val();
-        return nMap.getAssetsInBound();
-      } else {
-        if ($(src).val().trim() === '') {
-          this.filter[which] = -1;
-          return nMap.getAssetsInBound();
-        } else {
-          return alert('숫자만 입력하세요.');
-        }
-      }
+  decodeBldType: function(code) {
+    if (code === '') {
+      return '미분류';
+    } else {
+      return code.replace('one', '원룸').replace('sg', '상가').replace('lnd', '토지').replace('hs', '주택');
     }
-  },
-  searchAddr: function(src, e) {
-    var instance;
-    if (e.code === 'Enter'.toString()) {
-      instance = axios.create({
-        baseURL: consts.apiUrl,
-        headers: {
-          address: encodeURIComponent($(src).val())
-        }
-      });
-      return instance.get("locateAddress").then(function(response) {
-        var pos;
-        pos = response.data;
-        nMap.map.setCenter(new naver.maps.LatLng(pos.y, pos.x));
-        return nMap.map.setZoom(12);
-      }).catch(function(error) {
-        return console.log(error);
-      });
-    }
-  },
-  filterMainPurps: function(src, e) {
-    if (e.key === 'Enter'.toString()) {
-      this.filter.mainPurps = encodeURIComponent($(src).val());
-      return nMap.getAssetsInBound();
-    }
-  },
-  filterUseaprDay: function(src, e) {
-    if (e.key === 'Enter'.toString()) {
-      if (($.isNumeric($(src).val())) && ($(src).val().length === 4)) {
-        this.filter.useaprDay = $(src).val();
-        return nMap.getAssetsInBound();
-      } else {
-        if ($(src).val().trim() === '') {
-          this.filter.useaprDay = -1;
-          return nMap.getAssetsInBound();
-        } else {
-          return alert('4자리 년도만 입력하세요.');
-        }
-      }
-    }
-  },
-  resetFilter: function() {
-    this.filter = Object.assign({}, this.filterReset);
-    $('.has').val(0);
-    $('#bldTypeFilter').val('one');
-    $('.toReset').val('');
-    return nMap.getAssetsInBound();
   }
 };

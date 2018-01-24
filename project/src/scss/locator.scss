@@ -69,22 +69,29 @@
 
   #mapContainer {
     position: relative;
-    #filters {
-      padding: 8px 6px 0 8px;
-      background-color: rgba(255, 255, 255, 0.8);
-      border: 1px solid #ddd;
-      border-radius: 4px;
+    #floatOnMap {
       z-index: 200;
       position: absolute;
       left: 6px;
       top: 6px;
       > div {
+        display: inline-block;
+        padding: 8px 6px 0 8px;
+        background-color: rgba(255, 255, 255, 0.85);
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-right: 6px;
+        vertical-align: top;
+        > div {
         margin-bottom: 8px;
         > * {
           margin-right: 2px;
+          &:last-child {
+            margin-right: 0;
+          }
         }
         input {
-          padding: 5px;
+          padding: 3px;
           &.short {
             width: 99px;
           }
@@ -92,8 +99,57 @@
             width: 133px;
           }
         }
+        button {
+          &.half {
+            width: 50%;
+            box-sizing: border-box;
+          }
+          &.full {
+            width: 100%;
+          }
+        }
+        .indicator {
+          display: inline-block;
+          font-size: 0.85em;
+          text-align: center;
+          margin-left: 12px;
+          & > span:last-child {
+            color: #3aa800;
+            font-weight: bold;
+            margin-left: 4px;
+          }
+        }
       }
     }
+  }
+
+    #searchResult {
+      &.off {
+        display: none
+      }
+      #searched {
+        margin-top: 8px;
+        max-height: 664px;
+        background-color: rgba(0, 0, 0, 0.67);
+        overflow-y: scroll;
+        &>div {
+          color: white;
+          padding: 8px;
+          font-size: 0.75em;
+          line-height: 1.2em;
+          border-bottom: 1px solid #111;
+          cursor: pointer;
+          &:hover {
+            color: yellow;
+            background-color: rgba(0, 0, 0, 0.5);
+          }
+          > div:first-child {
+            color: lightgreen;
+          }
+        }
+      }
+    }
+
     #centerCircle {
       z-index: 200;
       border: 2px solid white;
@@ -125,10 +181,7 @@
     width: 200px;
     background-color: rgba(0, 0, 0, 0.67);
     overflow-y: scroll;
-    &::-webkit-scrollbar {
-      display: none;
-    }
-    div {
+    &>div {
       color: white;
       padding: 8px;
       font-size: 0.75em;
@@ -138,6 +191,9 @@
       &:hover {
         color: yellow;
         background-color: rgba(0, 0, 0, 0.5);
+      }
+      > div:first-child {
+        color: lightgreen;
       }
     }
   }

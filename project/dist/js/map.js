@@ -41,7 +41,7 @@ nMap = {
     });
     this.setMapCach(this.map);
     this.getAssetsInBound();
-    return asset.getRequests();
+    return request.getRequests();
   },
   setMapCach: function(map) {},
   getAssetsInBound: function() {
@@ -54,7 +54,7 @@ nMap = {
     }
   },
   setAssetMarkers: function() {
-    var _n, _r, _t, _this, ast, i, idx, j, k, len, len1, len2, marker, mkr, ref, ref1, ref2, results;
+    var _n, _r, _t, _this, ast, i, idx, j, k, l, len, len1, len2, len3, marker, mkr, ref, ref1, ref2, ref3, results, results1;
     _this = this;
     ref = this.assetMarkers;
     for (i = 0, len = ref.length; i < len; i++) {
@@ -68,30 +68,49 @@ nMap = {
       mkr.setMap(null);
     }
     this.dongMarkers = [];
-    ref2 = asset.assetList;
-    results = [];
-    for (idx = k = 0, len2 = ref2.length; k < len2; idx = ++k) {
-      ast = ref2[idx];
-      _n = (ast.bld_name.replace('(자동입력)', '')).trim() === '' ? 0 : 1;
-      _t = ast.bld_tel_owner.trim() === '' ? 0 : 1;
-      _r = ast.work_requested.trim() === '' ? 0 : 1;
-      marker = new naver.maps.Marker({
-        position: new naver.maps.LatLng(ast.bld_map_y, ast.bld_map_x),
-        map: this.map,
-        icon: `/img/n${_n}t${_t}r${_r}.png`,
-        size: new naver.maps.Size(16, 45),
-        origin: new naver.maps.Size(0, 0),
-        anchor: new naver.maps.Size(8, 45)
-      });
-      marker.set('idx', idx);
-      marker.addListener('click', function(e) {
-        mkr = e.overlay;
-        asset.selectAsset(mkr.idx);
-        return _this.setPano(mkr.idx);
-      });
-      results.push(this.assetMarkers.push(marker));
+    if (asset.assetList.length < consts.maxMarkers || this.map.zoom >= 12) {
+      ref2 = asset.assetList;
+      results = [];
+      for (idx = k = 0, len2 = ref2.length; k < len2; idx = ++k) {
+        ast = ref2[idx];
+        _n = (ast.bld_name.replace('(자동입력)', '')).trim() === '' ? 0 : 1;
+        _t = ast.bld_tel_owner.trim() === '' ? 0 : 1;
+        _r = ast.work_requested.trim() === '' ? 0 : 1;
+        marker = new naver.maps.Marker({
+          position: new naver.maps.LatLng(ast.bld_map_y, ast.bld_map_x),
+          map: this.map,
+          icon: `/img/n${_n}t${_t}r${_r}.png`,
+          size: new naver.maps.Size(16, 45),
+          origin: new naver.maps.Size(0, 0),
+          anchor: new naver.maps.Size(8, 45)
+        });
+        marker.set('idx', idx);
+        marker.addListener('click', function(e) {
+          mkr = e.overlay;
+          asset.selectAsset(mkr.idx);
+          return _this.setPano(asset.assetList[mkr.idx]);
+        });
+        results.push(this.assetMarkers.push(marker));
+      }
+      return results;
+    } else {
+      ref3 = asset.assetList;
+      results1 = [];
+      for (idx = l = 0, len3 = ref3.length; l < len3; idx = ++l) {
+        ast = ref3[idx];
+        if (idx % (Math.floor(asset.assetList.length / consts.maxMarkers)) === 0) {
+          marker = new naver.maps.Marker({
+            position: new naver.maps.LatLng(ast.bld_map_y, ast.bld_map_x),
+            map: this.map
+          });
+          marker.set('idx', idx);
+          results1.push(this.assetMarkers.push(marker));
+        } else {
+          results1.push(void 0);
+        }
+      }
+      return results1;
     }
-    return results;
   },
   setDongMarkers: function() {
     var ast, i, idx, j, k, len, len1, len2, marker, mkr, ref, ref1, ref2, results;
@@ -120,12 +139,12 @@ nMap = {
     }
     return results;
   },
-  setPano: function(idx) {
+  setPano: function(ast) {
     var pos;
     if (this.panoMarker != null) {
       this.panoMarker.setMap(null);
     }
-    pos = new naver.maps.LatLng(asset.assetList[idx].bld_map_y, asset.assetList[idx].bld_map_x);
+    pos = new naver.maps.LatLng(ast.bld_map_y, ast.bld_map_x);
     this.pano = new naver.maps.Panorama('panoContainer', {
       position: pos
     });

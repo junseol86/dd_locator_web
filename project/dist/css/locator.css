@@ -41,25 +41,64 @@
             width: 100%; }
   #outerWrapper #mapContainer {
     position: relative; }
-    #outerWrapper #mapContainer #filters {
-      padding: 8px 6px 0 8px;
-      background-color: rgba(255, 255, 255, 0.8);
-      border: 1px solid #ddd;
-      border-radius: 4px;
+    #outerWrapper #mapContainer #floatOnMap {
       z-index: 200;
       position: absolute;
       left: 6px;
       top: 6px; }
-      #outerWrapper #mapContainer #filters > div {
-        margin-bottom: 8px; }
-        #outerWrapper #mapContainer #filters > div > * {
-          margin-right: 2px; }
-        #outerWrapper #mapContainer #filters > div input {
-          padding: 5px; }
-          #outerWrapper #mapContainer #filters > div input.short {
-            width: 99px; }
-          #outerWrapper #mapContainer #filters > div input.long {
-            width: 133px; }
+      #outerWrapper #mapContainer #floatOnMap > div {
+        display: inline-block;
+        padding: 8px 6px 0 8px;
+        background-color: rgba(255, 255, 255, 0.85);
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-right: 6px;
+        vertical-align: top; }
+        #outerWrapper #mapContainer #floatOnMap > div > div {
+          margin-bottom: 8px; }
+          #outerWrapper #mapContainer #floatOnMap > div > div > * {
+            margin-right: 2px; }
+            #outerWrapper #mapContainer #floatOnMap > div > div > *:last-child {
+              margin-right: 0; }
+          #outerWrapper #mapContainer #floatOnMap > div > div input {
+            padding: 3px; }
+            #outerWrapper #mapContainer #floatOnMap > div > div input.short {
+              width: 99px; }
+            #outerWrapper #mapContainer #floatOnMap > div > div input.long {
+              width: 133px; }
+          #outerWrapper #mapContainer #floatOnMap > div > div button.half {
+            width: 50%;
+            box-sizing: border-box; }
+          #outerWrapper #mapContainer #floatOnMap > div > div button.full {
+            width: 100%; }
+          #outerWrapper #mapContainer #floatOnMap > div > div .indicator {
+            display: inline-block;
+            font-size: 0.85em;
+            text-align: center;
+            margin-left: 12px; }
+            #outerWrapper #mapContainer #floatOnMap > div > div .indicator > span:last-child {
+              color: #3aa800;
+              font-weight: bold;
+              margin-left: 4px; }
+    #outerWrapper #mapContainer #searchResult.off {
+      display: none; }
+    #outerWrapper #mapContainer #searchResult #searched {
+      margin-top: 8px;
+      max-height: 664px;
+      background-color: rgba(0, 0, 0, 0.67);
+      overflow-y: scroll; }
+      #outerWrapper #mapContainer #searchResult #searched > div {
+        color: white;
+        padding: 8px;
+        font-size: 0.75em;
+        line-height: 1.2em;
+        border-bottom: 1px solid #111;
+        cursor: pointer; }
+        #outerWrapper #mapContainer #searchResult #searched > div:hover {
+          color: yellow;
+          background-color: rgba(0, 0, 0, 0.5); }
+        #outerWrapper #mapContainer #searchResult #searched > div > div:first-child {
+          color: lightgreen; }
     #outerWrapper #mapContainer #centerCircle {
       z-index: 200;
       border: 2px solid white;
@@ -86,15 +125,15 @@
     width: 200px;
     background-color: rgba(0, 0, 0, 0.67);
     overflow-y: scroll; }
-    #outerWrapper #requestContainer::-webkit-scrollbar {
-      display: none; }
-    #outerWrapper #requestContainer div {
+    #outerWrapper #requestContainer > div {
       color: white;
       padding: 8px;
       font-size: 0.75em;
       line-height: 1.2em;
       border-bottom: 1px solid #111;
       cursor: pointer; }
-      #outerWrapper #requestContainer div:hover {
+      #outerWrapper #requestContainer > div:hover {
         color: yellow;
         background-color: rgba(0, 0, 0, 0.5); }
+      #outerWrapper #requestContainer > div > div:first-child {
+        color: lightgreen; }

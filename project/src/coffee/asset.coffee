@@ -1,90 +1,53 @@
 asset = {
   assetList: []
   dongList: []
-  requests: []
   selectedAsset: null
-  filter: null
-  filterReset: {
-    bldType: 'one',
-    hasName: 0,
-    hasNumber: 0,
-    hasGwan: 0,
-    fmlyMin: -1,
-    fmlyMax: -1,
-    mainPurps: '',
-    useaprDay: '',
-  }
 
-  getRequests: () ->
-    _this = this
-    instance = axios.create {
-      baseURL: consts.apiUrl
-      headers: {}
-    }
-    instance.get 'assetRequestedV2'
-    .then (response) ->
-      _this.requests = _.reverse(response.data)
-      _this.showRequested()
-    .catch (error) ->
-      console.log(error)
-
-  showRequested: () ->
-    $('#requestContainer').empty()
-    for rq, idx in this.requests
-      $('#requestContainer').append (
-        "<div onclick='asset.selectRequested(#{idx})'>#{rq.plat_plc}</div>")
-
-  selectRequested: (idx) ->
-    this.selectedAsset = this.requests[idx]
-    this.selectAssetResult()
-    nMap.map.setCenter(new naver.maps.LatLng(
-      this.requests[idx].bld_map_y, this.requests[idx].bld_map_x))
-    nMap.map.setZoom 14
-    nMap.getAssetsInBound()
 
   getAssetList: (_top, _bottom, _left, _right) ->
-    console.log this.filter
     _this = this
-    if this.filter == null
-      this.filter = Object.assign {}, this.filterReset
+    if fltr.filter == null
+      fltr.filter = Object.assign {}, fltr.filterReset
     headerObj = {
       'top': _top
       'bottom': _bottom
       'left': _left
       'right': _right
     }
-    headerObj = Object.assign headerObj, this.filter
+    headerObj = Object.assign headerObj, fltr.filter
     
     instance = axios.create {
       baseURL: consts.apiUrl
       headers: headerObj
     }
-    instance.get 'assetListV3'
+    instance.get 'assetListV4'
     .then (response) ->
-      _this.assetList = _.reverse(response.data)
+      _this.assetList = _.reverse(response.data.asset_list)
+      $('#totalAssetCount').text response.data.total_count
       nMap.setAssetMarkers()
     .catch (error) ->
       console.log(error)
 
   getDongList: (_top, _bottom, _left, _right) ->
     _this = this
-    if this.filter == null
-      this.filter = Object.assign {}, this.filterReset
+    if fltr.filter == null
+      fltr.filter = Object.assign {}, fltr.filterReset
     headerObj = {
       'top': _top
       'bottom': _bottom
       'left': _left
       'right': _right
     }
-    headerObj = Object.assign headerObj, this.filter
+    headerObj = Object.assign headerObj, fltr.filter
 
     instance = axios.create {
       baseURL: consts.apiUrl
       headers: headerObj
     }
-    instance.get 'assetDongsV3'
+    instance.get 'assetDongsV4'
     .then (response) ->
-      _this.dongList = _.reverse(response.data)
+      _this.dongList = _.reverse(response.data.dong_list)
+      $('#totalAssetCount').text response.data.total_count
       nMap.setDongMarkers()
     .catch (error) ->
       console.log(error)
@@ -96,8 +59,8 @@ asset = {
       
   deleteAsset: () ->
     _this = this
-    if this.filter == null
-      this.filter = Object.assign {}, this.filterReset
+    if fltr.filter == null
+      fltr.filter = Object.assign {}, fltr.filterReset
     headerObj = {
       'bld_idx': _this.selectedAsset.bld_idx
     }
@@ -183,73 +146,11 @@ asset = {
       }
       .then (result) ->
         nMap.getAssetsInBound()
-        _this.getRequests()
-
-  filterBldType: (src, e) ->
-    this.filter.bldType = $(src).val()
-    nMap.getAssetsInBound()
-
-  filterHasName: (src, e) ->
-    this.filter.hasName = $(src).val()
-    nMap.getAssetsInBound()
-
-  filterHasNumber: (src, e) ->
-    this.filter.hasNumber = $(src).val()
-    nMap.getAssetsInBound()
-
-  filterHasGwan: (src, e) ->
-    this.filter.hasGwan = $(src).val()
-    nMap.getAssetsInBound()
-
-  filterFmly: (src, e, which) ->
-    if e.key ==  'Enter'.toString()
-      if $.isNumeric $(src).val()
-        this.filter[which] = $(src).val()
-        nMap.getAssetsInBound()
-      else
-        if ($(src).val().trim() == '')
-          this.filter[which] = -1
-          nMap.getAssetsInBound()
-        else
-          alert '숫자만 입력하세요.'
-
-  searchAddr: (src, e) ->
-    if e.code ==  'Enter'.toString()
-      instance = axios.create {
-        baseURL: consts.apiUrl
-        headers: {
-          address: encodeURIComponent $(src).val()
-        }
-      }
-      instance.get "locateAddress"
-      .then (response) ->
-        pos = response.data
-        nMap.map.setCenter(new naver.maps.LatLng pos.y, pos.x)
-        nMap.map.setZoom 12
-      .catch (error) ->
-        console.log(error)
-
-  filterMainPurps: (src, e) ->
-    if e.key ==  'Enter'.toString()
-      this.filter.mainPurps = encodeURIComponent $(src).val()
-      nMap.getAssetsInBound()
-
-  filterUseaprDay: (src, e) ->
-    if e.key ==  'Enter'.toString()
-      if ($.isNumeric $(src).val()) and ($(src).val().length == 4)
-        this.filter.useaprDay = $(src).val()
-        nMap.getAssetsInBound()
-      else
-        if ($(src).val().trim() == '')
-          this.filter.useaprDay = -1
-          nMap.getAssetsInBound()
-        else
-          alert '4자리 년도만 입력하세요.'
-
-  resetFilter: () ->
-    this.filter = Object.assign {}, this.filterReset
-    $('.has').val(0)
-    $('#bldTypeFilter').val('one')
-    $('.toReset').val('')
-    nMap.getAssetsInBound()
+        request.getRequests()
+        
+  decodeBldType: (code) ->
+    if (code == '')
+      return '미분류'
+    else
+      return code.replace('one', '원룸').replace('sg', '상가').replace('lnd', '토지').replace('hs', '주택')
 }

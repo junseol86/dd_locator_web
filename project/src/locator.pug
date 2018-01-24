@@ -10,6 +10,9 @@ html(lang='ko')
     script(type='text/javascript' src='/js/axios.min.js')
     script(type='text/javascript' src='/js/qs.min.js')
     script(type='text/javascript' src='/js/asset.js')
+    script(type='text/javascript' src='/js/filter.js')
+    script(type='text/javascript' src='/js/request.js')
+    script(type='text/javascript' src='/js/search.js')
     script(type='text/javascript' src='/js/sizing.js')
     script(type='text/javascript' src='https://openapi.map.naver.com/openapi/v3/maps.js?clientId=zgIERIui2VzCjd43kVjX&submodules=panorama,geocoder')
     script(defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js")
@@ -118,52 +121,73 @@ html(lang='ko')
                           i(class="far fa-trash-alt")
                         span 삭제
       div#mapContainer
-        div#filters
-          div
-            select#bldTypeFilter(onchange="asset.filterBldType(this, event)")
-              option(value="one") 원룸
-              option(value="sg") 상가
-              option(value="lnd") 토지
-              option(value="hs") 주택
-              option(value="all") 전체
-            input.toReset.short.spaceOnLeft(
-              type="text" placeholder="가구 수 >=" onkeypress="asset.filterFmly(this, event, 'fmlyMin')"
-              )
-            input.toReset.short(
-              type="text" placeholder="가구 수 <=" onkeypress="asset.filterFmly(this, event, 'fmlyMax')"
-              )
-          div
-            select.has#hasName(onclick="asset.filterHasName(this, event)")
-              option(value="0") 이름무관
-              option(value="-1") 이름없음
-              option(value="1") 이름있음
-            select.has#hasNumber(onclick="asset.filterHasNumber(this, event)")
-              option(value="0") 번호무관
-              option(value="-1") 번호없음
-              option(value="1") 번호있음
-            select.has#hasGwan(onclick="asset.filterHasGwan(this, event)")
-              option(value="0") 업체무관
-              option(value="-1") 업체없음
-              option(value="1") 업체있음
-          div(style="display: none;")
-            input.toReset.long(
-              type="text" placeholder="건물 이름 검색" onkeypress="asset.filterSearchName(this, event)"
-              )
-            input.toReset.long(
-              type="text" placeholder="주소 검색" onkeypress="asset.searchAddr(this, event)"
-              )
-          div
-            input.toReset.long(
-              type="text" placeholder="주 용도 검색" onkeypress="asset.filterMainPurps(this, event)"
-              )
-            input.toReset.long(
-              type="text" placeholder="사용승인년도 ~부터" onkeypress="asset.filterUseaprDay(this, event)"
-              )
-          div
-            button(onclick="asset.resetFilter()")
-              span
-                i(class="fas fa-sync-alt") 
-              span 초기화
+        div#floatOnMap
+          div#filters
+            div
+              select#bldTypeFilter(onchange="fltr.filterBldType(this, event)")
+                option(value="one") 원룸
+                option(value="sg") 상가
+                option(value="lnd") 토지
+                option(value="hs") 주택
+                option(value="all") 전체
+              input.toReset.short.spaceOnLeft(
+                type="text" placeholder="가구 수 >=" onkeypress="fltr.filterFmly(this, event, 'fmlyMin')"
+                )
+              input.toReset.short(
+                type="text" placeholder="가구 수 <=" onkeypress="fltr.filterFmly(this, event, 'fmlyMax')"
+                )
+            div
+              select.has#hasName(onclick="fltr.filterHasName(this, event)")
+                option(value="0") 이름무관
+                option(value="-1") 이름없음
+                option(value="1") 이름있음
+              select.has#hasNumber(onclick="fltr.filterHasNumber(this, event)")
+                option(value="0") 번호무관
+                option(value="-1") 번호없음
+                option(value="1") 번호있음
+              select.has#hasGwan(onclick="fltr.filterHasGwan(this, event)")
+                option(value="0") 업체무관
+                option(value="-1") 업체없음
+                option(value="1") 업체있음
+            div(style="display: none;")
+              input.toReset.long(
+                type="text" placeholder="건물 이름 검색" onkeypress="fltr.filterSearchName(this, event)"
+                )
+              input.toReset.long(
+                type="text" placeholder="주소 검색" onkeypress="asset.searchAddr(this, event)"
+                )
+            div
+              input.toReset.long(
+                type="text" placeholder="주 용도 검색" onkeypress="fltr.filterMainPurps(this, event)"
+                )
+              input.toReset.long(
+                type="text" placeholder="사용승인년도 ~부터" onkeypress="fltr.filterUseaprDay(this, event)"
+                )
+            div
+              button.half(onclick="fltr.resetFilter()")
+                span
+                  i(class="fas fa-sync-alt") 
+                span 초기화
+              div.indicator
+                span 전체:
+                span#totalAssetCount 0
+            div(style="margin-top: 20px;")
+              input.toClear.long#searchBldName(
+                type="text" placeholder="건물명 검색" onkeypress="search.searchAssets(this, event)"
+                )
+              input.toClear.long#searchBldMemo(
+                type="text" placeholder="메모 검색" onkeypress="search.searchAssets(this, event)"
+                )
+            div.off#searchResult
+              button.full(onclick="search.clearSearched()")
+                span
+                  i(class="fas fa-sync-alt") 
+                span 검색결과 비우기
+              div#searched
+          div#numberSearch
+            div
+              input.long(placeholder="전화번호 검색")
+
         div#centerCircle
           div
             div

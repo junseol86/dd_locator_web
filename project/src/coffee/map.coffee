@@ -39,7 +39,7 @@ nMap = {
     
     this.setMapCach(this.map)
     this.getAssetsInBound()
-    asset.getRequests()
+    request.getRequests()
 
   setMapCach: (map) ->
 
@@ -59,24 +59,35 @@ nMap = {
       mkr.setMap null
     this.dongMarkers = []
 
-    for ast, idx in asset.assetList
-      _n = if (ast.bld_name.replace '(자동입력)', '').trim() == '' then 0 else 1
-      _t = if ast.bld_tel_owner.trim() == '' then 0 else 1
-      _r = if ast.work_requested.trim() == '' then 0 else 1
-      marker = new naver.maps.Marker {
-        position: new naver.maps.LatLng ast.bld_map_y, ast.bld_map_x
-        map: this.map
-        icon: "/img/n#{_n}t#{_t}r#{_r}.png"
-        size: new naver.maps.Size 16, 45
-        origin: new naver.maps.Size 0, 0
-        anchor: new naver.maps.Size 8, 45
-      }
-      marker.set 'idx', idx
-      marker.addListener 'click', (e) ->
-        mkr = e.overlay
-        asset.selectAsset(mkr.idx)
-        _this.setPano(mkr.idx)
-      this.assetMarkers.push marker
+    if asset.assetList.length < consts.maxMarkers || this.map.zoom >= 12
+      for ast, idx in asset.assetList
+        _n = if (ast.bld_name.replace '(자동입력)', '').trim() == '' then 0 else 1
+        _t = if ast.bld_tel_owner.trim() == '' then 0 else 1
+        _r = if ast.work_requested.trim() == '' then 0 else 1
+        marker = new naver.maps.Marker {
+          position: new naver.maps.LatLng ast.bld_map_y, ast.bld_map_x
+          map: this.map
+          icon: "/img/n#{_n}t#{_t}r#{_r}.png"
+          size: new naver.maps.Size 16, 45
+          origin: new naver.maps.Size 0, 0
+          anchor: new naver.maps.Size 8, 45
+        }
+        marker.set 'idx', idx
+        marker.addListener 'click', (e) ->
+          mkr = e.overlay
+          asset.selectAsset(mkr.idx)
+          _this.setPano(asset.assetList[mkr.idx])
+        this.assetMarkers.push marker
+    else
+      for ast, idx in asset.assetList
+        if idx % (Math.floor(asset.assetList.length / consts.maxMarkers)) == 0
+          marker = new naver.maps.Marker {
+            position: new naver.maps.LatLng ast.bld_map_y, ast.bld_map_x
+            map: this.map
+          }
+          marker.set 'idx', idx
+          this.assetMarkers.push marker
+          
 
   setDongMarkers: () ->
     for mkr in this.assetMarkers
@@ -94,10 +105,10 @@ nMap = {
       marker.set 'idx', idx
       this.assetMarkers.push marker
 
-  setPano: (idx) ->
+  setPano: (ast) ->
     if this.panoMarker?
       this.panoMarker.setMap null
-    pos = new naver.maps.LatLng asset.assetList[idx].bld_map_y, asset.assetList[idx].bld_map_x
+    pos = new naver.maps.LatLng ast.bld_map_y, ast.bld_map_x
     this.pano = new naver.maps.Panorama 'panoContainer', {
       position: pos
     }
