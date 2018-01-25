@@ -145,8 +145,10 @@ nMap = {
       this.panoMarker.setMap(null);
     }
     pos = new naver.maps.LatLng(ast.bld_map_y, ast.bld_map_x);
+    this.pano = null;
     this.pano = new naver.maps.Panorama('panoContainer', {
-      position: pos
+      position: pos,
+      aroundControl: true
     });
     this.panoMarker = new naver.maps.Marker({
       position: pos

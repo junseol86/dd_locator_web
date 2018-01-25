@@ -119,7 +119,7 @@ asset = {
   seePhoto: () ->
     window.open consts.photoUrl + this.selectedAsset.photo, '_blank'
 
-  saveAsset: (request) ->
+  saveAsset: (rqst) ->
     _this = this
     if this.selectedAsset == null
       alert '매물이 선택되지 않았습니다.'
@@ -134,7 +134,7 @@ asset = {
         this.selectedAsset.bld_roomkey = $('#bldRoomKey').val()
         this.selectedAsset.bld_on_wall = $('#bldOnWall').val()
         this.selectedAsset.bld_on_parked = $('#bldOnParked').val()
-        this.selectedAsset.work_requested = request
+        this.selectedAsset.work_requested = rqst
       strObj = Qs.stringify this.selectedAsset
 
       axios.put consts.apiUrl + 'asset/modifyV2', strObj, {

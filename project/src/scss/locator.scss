@@ -41,7 +41,7 @@
         width: 100%;
         & > tbody > tr {
           & > td {
-            padding-bottom: 8px;
+            padding-bottom: 4px;
             &:first-child {
               width: 110px;
               font-size: 0.95em;
@@ -75,7 +75,14 @@
       left: 6px;
       top: 6px;
       > div {
-        display: inline-block;
+
+        &#numberSearch {
+          position: absolute;
+          top: 0;
+          right: -220px;
+          width: 200px;
+        }
+
         padding: 8px 6px 0 8px;
         background-color: rgba(255, 255, 255, 0.85);
         border: 1px solid #ddd;
@@ -129,7 +136,7 @@
       }
       #searched {
         margin-top: 8px;
-        max-height: 664px;
+        max-height: 634px;
         background-color: rgba(0, 0, 0, 0.67);
         overflow-y: scroll;
         &>div {

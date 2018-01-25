@@ -126,7 +126,7 @@ asset = {
   seePhoto: function() {
     return window.open(consts.photoUrl + this.selectedAsset.photo, '_blank');
   },
-  saveAsset: function(request) {
+  saveAsset: function(rqst) {
     var _this, strObj;
     _this = this;
     if (this.selectedAsset === null) {
@@ -142,7 +142,7 @@ asset = {
       this.selectedAsset.bld_roomkey = $('#bldRoomKey').val();
       this.selectedAsset.bld_on_wall = $('#bldOnWall').val();
       this.selectedAsset.bld_on_parked = $('#bldOnParked').val();
-      this.selectedAsset.work_requested = request;
+      this.selectedAsset.work_requested = rqst;
     }
     strObj = Qs.stringify(this.selectedAsset);
     return axios.put(consts.apiUrl + 'asset/modifyV2', strObj, {
