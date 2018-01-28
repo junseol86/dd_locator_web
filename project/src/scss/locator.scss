@@ -64,7 +64,6 @@
         }
       }
     }
-
   }
 
   #mapContainer {
@@ -79,8 +78,53 @@
         &#numberSearch {
           position: absolute;
           top: 0;
-          right: -220px;
-          width: 200px;
+          right: -300px;
+          width: 280px;
+          input {
+            width: 100%;
+          }
+          #afterPhonenumSearch {
+            display: none;
+            table {
+              width: 100%;
+              font-size: 0.8em;
+              color: white;
+              background-color: rgba(0, 0, 0, 0.67);
+              tr {
+                &:last-child {
+                  > td {
+                    border-bottom: 0;
+                  }
+                }
+                > td {
+                  border-bottom: 1px solid #444;
+                    svg {
+                      color: pink;
+                    }
+                  padding: 8px 6px;
+                  &:first-child {
+                    color: lightgreen;
+                  }
+                  &:last-child {
+                    cursor: pointer;
+                    &:hover {
+                      color: yellow;
+                      svg {
+                        color: tomato;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            input {
+              margin: 8px 0 4px 0;
+              width: 100%;
+            }
+            button {
+              width: 100%;
+            }
+          }
         }
 
         padding: 8px 6px 0 8px;

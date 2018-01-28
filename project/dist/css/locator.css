@@ -56,8 +56,37 @@
         #outerWrapper #mapContainer #floatOnMap > div#numberSearch {
           position: absolute;
           top: 0;
-          right: -220px;
-          width: 200px; }
+          right: -300px;
+          width: 280px; }
+          #outerWrapper #mapContainer #floatOnMap > div#numberSearch input {
+            width: 100%; }
+          #outerWrapper #mapContainer #floatOnMap > div#numberSearch #afterPhonenumSearch {
+            display: none; }
+            #outerWrapper #mapContainer #floatOnMap > div#numberSearch #afterPhonenumSearch table {
+              width: 100%;
+              font-size: 0.8em;
+              color: white;
+              background-color: rgba(0, 0, 0, 0.67); }
+              #outerWrapper #mapContainer #floatOnMap > div#numberSearch #afterPhonenumSearch table tr:last-child > td {
+                border-bottom: 0; }
+              #outerWrapper #mapContainer #floatOnMap > div#numberSearch #afterPhonenumSearch table tr > td {
+                border-bottom: 1px solid #444;
+                padding: 8px 6px; }
+                #outerWrapper #mapContainer #floatOnMap > div#numberSearch #afterPhonenumSearch table tr > td svg {
+                  color: pink; }
+                #outerWrapper #mapContainer #floatOnMap > div#numberSearch #afterPhonenumSearch table tr > td:first-child {
+                  color: lightgreen; }
+                #outerWrapper #mapContainer #floatOnMap > div#numberSearch #afterPhonenumSearch table tr > td:last-child {
+                  cursor: pointer; }
+                  #outerWrapper #mapContainer #floatOnMap > div#numberSearch #afterPhonenumSearch table tr > td:last-child:hover {
+                    color: yellow; }
+                    #outerWrapper #mapContainer #floatOnMap > div#numberSearch #afterPhonenumSearch table tr > td:last-child:hover svg {
+                      color: tomato; }
+            #outerWrapper #mapContainer #floatOnMap > div#numberSearch #afterPhonenumSearch input {
+              margin: 8px 0 4px 0;
+              width: 100%; }
+            #outerWrapper #mapContainer #floatOnMap > div#numberSearch #afterPhonenumSearch button {
+              width: 100%; }
         #outerWrapper #mapContainer #floatOnMap > div > div {
           margin-bottom: 8px; }
           #outerWrapper #mapContainer #floatOnMap > div > div > * {

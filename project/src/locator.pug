@@ -13,6 +13,7 @@ html(lang='ko')
     script(type='text/javascript' src='/js/filter.js')
     script(type='text/javascript' src='/js/request.js')
     script(type='text/javascript' src='/js/search.js')
+    script(type='text/javascript' src='/js/phonenum.js')
     script(type='text/javascript' src='/js/sizing.js')
     script(type='text/javascript' src='https://openapi.map.naver.com/openapi/v3/maps.js?clientId=zgIERIui2VzCjd43kVjX&submodules=panorama,geocoder')
     script(defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js")
@@ -186,7 +187,12 @@ html(lang='ko')
               div#searched
           div#numberSearch
             div
-              input.long(placeholder="전화번호 검색")
+              input#phonenumSearch(placeholder="전화번호 검색" onkeypress="phonenum.searchPhonenum(this, event)")
+            div#afterPhonenumSearch
+              table#phonenumResult
+            div
+              input#phonenumBelong(placeholder="위 번호를 이 이름으로 (엔터로 저장)" 
+              onkeypress="phonenum.savePhonenum(this, event)")
 
         div#centerCircle
           div
