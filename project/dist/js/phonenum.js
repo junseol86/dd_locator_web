@@ -7,7 +7,11 @@ phonenum = {
     if (e.key === 'Enter'.toString()) {
       filted = this.filtNonNumeric($('#phonenumSearch').val());
       if (filted !== '') {
-        return this.getPhonenums(filted);
+        if (filted.length > 3) {
+          return this.getPhonenums(filted);
+        } else {
+          return alert('4자 이상 입력하세요.');
+        }
       } else {
         this.phonenums = [];
         return this.showPhonenums();

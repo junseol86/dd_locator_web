@@ -5,7 +5,10 @@ phonenum = {
     if e.key ==  'Enter'.toString()
       filted = this.filtNonNumeric $('#phonenumSearch').val()
       if filted != ''
-        this.getPhonenums(filted)
+        if filted.length > 3
+          this.getPhonenums(filted)
+        else
+          alert '4자 이상 입력하세요.'
       else
         this.phonenums = []
         this.showPhonenums()
