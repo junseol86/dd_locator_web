@@ -78,13 +78,15 @@
         &#numberSearch {
           position: absolute;
           top: 0;
-          right: -300px;
-          width: 280px;
+          right: -340px;
+          width: 320px;
           input {
             width: 100%;
           }
           #afterPhonenumSearch {
             display: none;
+            max-height: 200px;
+            overflow-y: scroll;
             table {
               width: 100%;
               font-size: 0.8em;
@@ -97,6 +99,7 @@
                   }
                 }
                 > td {
+                  line-height: 1.2em;
                   border-bottom: 1px solid #444;
                     svg {
                       color: pink;
@@ -104,12 +107,14 @@
                   padding: 8px 6px;
                   &:first-child {
                     color: lightgreen;
+                    width: 112px;
                   }
                   &:last-child {
+                    width: 48px;
                     cursor: pointer;
                     &:hover {
                       color: yellow;
-                      svg {
+                      svg   {
                         color: tomato;
                       }
                     }

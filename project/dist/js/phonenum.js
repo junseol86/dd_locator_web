@@ -24,7 +24,7 @@ phonenum = {
       }
     });
     return instance.get('phoneNumberList').then(function(response) {
-      _this.phonenums = _.reverse(response.data);
+      _this.phonenums = response.data;
       return _this.showPhonenums();
     }).catch(function(error) {
       return console.log(error);
@@ -41,6 +41,17 @@ phonenum = {
     }
     return result;
   },
+  filtNonNumericOrDash: function(str) {
+    var char, i, idx, len, result;
+    result = '';
+    for (idx = i = 0, len = str.length; i < len; idx = ++i) {
+      char = str[idx];
+      if (!isNaN(char) || char === '-') {
+        result += char;
+      }
+    }
+    return result;
+  },
   showPhonenums: function() {
     var i, idx, len, pn, ref, results;
     $('#phonenumResult').empty();
@@ -50,7 +61,7 @@ phonenum = {
       results = [];
       for (idx = i = 0, len = ref.length; i < len; idx = ++i) {
         pn = ref[idx];
-        results.push($('#phonenumResult').append('<tr>' + `<td>${pn.pn_belong}</td>` + `<td>${pn.pn_number}</td>` + `<td onclick='phonenum.deletePhonenum(${pn.pn_idx})'>` + "<i class='fa fa-times-circle'></i>삭제" + "</td>" + '</tr>'));
+        results.push($('#phonenumResult').append('<tr>' + `<td>${pn.pn_belong}</td>` + `<td>${pn.pn_number}</td>` + `<td onclick='phonenum.deletePhonenum(${pn.pn_idx})'>` + (pn.pn_idx === 0 ? "" : "<i class='fa fa-times-circle'></i>삭제" + "</td>" + '</tr>')));
       }
       return results;
     } else {
@@ -61,7 +72,7 @@ phonenum = {
     var _this, phonenumBelong, phonenumNumber, phonenumObj;
     if (e.key === 'Enter'.toString()) {
       _this = this;
-      phonenumNumber = this.filtNonNumeric($('#phonenumSearch').val());
+      phonenumNumber = this.filtNonNumericOrDash($('#phonenumSearch').val());
       phonenumBelong = $('#phonenumBelong').val();
       if (phonenumNumber.trim() === '' || phonenumBelong.trim() === '') {
         return alert('전화번호와 번호주를 입력하세요.');
@@ -85,18 +96,20 @@ phonenum = {
   },
   deletePhonenum: function(pnIdx) {
     var _this, headerObj, instance;
-    _this = this;
-    headerObj = {
-      'pn_idx': pnIdx
-    };
-    instance = axios.create({
-      baseURL: consts.apiUrl,
-      headers: headerObj
-    });
-    return instance.delete('phoneNumberDelete').then(function(response) {
-      return _this.getPhonenums(_this.filtNonNumeric($('#phonenumSearch').val()));
-    }).catch(function(error) {
-      return console.log(error);
-    });
+    if (confirm('이 전화번호를 삭제하시겠습니까?')) {
+      _this = this;
+      headerObj = {
+        'pn_idx': pnIdx
+      };
+      instance = axios.create({
+        baseURL: consts.apiUrl,
+        headers: headerObj
+      });
+      return instance.delete('phoneNumberDelete').then(function(response) {
+        return _this.getPhonenums(_this.filtNonNumeric($('#phonenumSearch').val()));
+      }).catch(function(error) {
+        return console.log(error);
+      });
+    }
   }
 };

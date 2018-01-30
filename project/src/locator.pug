@@ -35,11 +35,15 @@ html(lang='ko')
               td 종류
               td
                 select#bldType(name="type")
-                  option(value="one") 원룸
-                  option(value="sg") 상가
+                  option(value="apt") 아파트
+                  option(value="yd") 연립·다세대
+                  option(value="ot") 오피스텔
+                  option(value="dd") 단독
+                  option(value="one" selected="selected") 다가구
+                  option(value="su") 상업·업무용
                   option(value="lnd") 토지
-                  option(value="hs") 주택
-                  option(value="") 미분류
+                  option(value="bi") 분양·입주권
+                  option(value="all") 전체
             tr
               td 주소
               td#oldAddr
@@ -126,10 +130,14 @@ html(lang='ko')
           div#filters
             div
               select#bldTypeFilter(onchange="fltr.filterBldType(this, event)")
-                option(value="one") 원룸
-                option(value="sg") 상가
+                option(value="apt") 아파트
+                option(value="yd") 연립·다세대
+                option(value="ot") 오피스텔
+                option(value="dd") 단독
+                option(value="one" selected="selected") 다가구
+                option(value="su") 상업·업무용
                 option(value="lnd") 토지
-                option(value="hs") 주택
+                option(value="bi") 분양·입주권
                 option(value="all") 전체
               input.toReset.short.spaceOnLeft(
                 type="text" placeholder="가구 수 >=" onkeypress="fltr.filterFmly(this, event, 'fmlyMin')"
@@ -174,7 +182,7 @@ html(lang='ko')
                 span#totalAssetCount 0
             div(style="margin-top: 20px;")
               input.toClear.long#searchBldName(
-                type="text" placeholder="건물명 검색" onkeypress="search.searchAssets(this, event)"
+                type="text" placeholder="건물명·주소 검색" onkeypress="search.searchAssets(this, event)"
                 )
               input.toClear.long#searchBldMemo(
                 type="text" placeholder="메모 검색" onkeypress="search.searchAssets(this, event)"
