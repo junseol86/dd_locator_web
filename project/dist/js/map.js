@@ -143,6 +143,7 @@ nMap = {
     var pos;
     if (this.panoMarker != null) {
       this.panoMarker.setMap(null);
+      this.panoMarker = null;
     }
     pos = new naver.maps.LatLng(ast.bld_map_y, ast.bld_map_x);
     this.pano = null;

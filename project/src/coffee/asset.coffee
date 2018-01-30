@@ -95,7 +95,8 @@ asset = {
   selectAssetResult: () ->
     $('#oldAddr').text this.selectedAsset.plat_plc
     $('#newAddr').text this.selectedAsset.new_plat_plc
-    $('#flrFml').text this.selectedAsset.grnd_flr_cnt + ' | ' + this.selectedAsset.fmly_cnt
+    $('#flrCnt').text this.selectedAsset.grnd_flr_cnt + ' | '
+    $('#fmlyCnt').val this.selectedAsset.bld_fmly_cnt
     $('#useApr').text this.selectedAsset.useapr_day
     $('#mainPurps').text this.selectedAsset.main_purps
     $('#etcPurps').text this.selectedAsset.etc_purps
@@ -126,6 +127,7 @@ asset = {
     else
         this.selectedAsset.bld_type = $('#bldType').val()
         this.selectedAsset.bld_name = $('#bldName').val()
+        this.selectedAsset.bld_fmly_cnt = $('#fmlyCnt').val()
         this.selectedAsset.bld_gwan = $('#bldGwan').val()
         this.selectedAsset.bld_memo = $('#bldMemo').val()
         this.selectedAsset.bld_tel_owner = $('#bldTelOwner').val()
@@ -137,7 +139,7 @@ asset = {
         this.selectedAsset.work_requested = rqst
       strObj = Qs.stringify this.selectedAsset
 
-      axios.put consts.apiUrl + 'asset/modifyV2', strObj, {
+      axios.put consts.apiUrl + 'asset/modifyV3', strObj, {
         headers: {
           bld_idx: this.selectedAsset.bld_idx
         }

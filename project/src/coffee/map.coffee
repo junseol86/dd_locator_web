@@ -108,6 +108,7 @@ nMap = {
   setPano: (ast) ->
     if this.panoMarker?
       this.panoMarker.setMap null
+      this.panoMarker = null
     pos = new naver.maps.LatLng ast.bld_map_y, ast.bld_map_x
     this.pano = null
     this.pano = new naver.maps.Panorama 'panoContainer', {
